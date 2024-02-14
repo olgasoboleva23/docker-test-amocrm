@@ -1,17 +1,19 @@
 <template>
-  <h1 class="text-deep-purple-lighten-3">amoCRM test</h1>
   <div class="d-flex justify-center py-3">
-      <v-sheet min-width="300px" class="bg-transparent">
-          <v-form method="post" action="/send_api_request">
+      <v-sheet class="pa-6 pt-0" min-width="350px">
+          <h1 class="text-deep-purple-lighten-3 py-2">amoCRM</h1>
+          <v-form @submit.prevent="submitHandler">
             <v-text-field
                 variant="outlined"
                 placeholder="Имя"
-                v-model="name"></v-text-field>
+                rounded="xl"
+                v-model="username"></v-text-field>
 
             <v-text-field
                 variant="outlined"
                 :rules="rulesEmail"
                 placeholder="Email"
+                rounded="xl"
                 v-model="email"></v-text-field>
 
             <vue-tel-input
@@ -26,15 +28,18 @@
                 variant="outlined"
                 type="number"
                 placeholder="Цена"
+                rounded="xl"
+                :rules="rulesPrice"
                 v-model="price"></v-text-field>
 
             <v-row justify=center no-gutters>
                 <v-btn
-                    variant="outlined"
+                    variant="tonal"
                     @click="btnClickHandler"
                     type="submit"
                     block
                     rounded="xl"
+                    class="font-weight-black text-overline"
                     color="deep-purple-lighten-3">Отправить</v-btn>
             </v-row>
           </v-form>
@@ -42,27 +47,40 @@
   </div>
 </template>
 <script>
-//import axios from 'axios';
+import axios from 'axios';
 
 export default {
   data() {
     return {
-        name: '',
+        username: '',
         email: '',
         phone: '',
         price: null,
+        flag: false,
         rulesEmail: [
             (value) => {
                 if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
                 return 'Email должен быть корректным.'
             },
         ],
+        rulesPrice: [
+            (value) => {
+                console.log(value);
+                console.log(String(value).includes('.'));
+                if (!String(value).includes('.')) return true
+                return 'Должно быть целым.'
+            },
+        ],
+        csrf_token: window.token
     }
   },
   computed: {
     formDisabled() {
-      return !this.name || !this.phone || !this.price || !this.email;
+      return !this.username || !this.phone || !this.price || !this.email;
     }
+  },
+  mounted() {
+    setTimeout(() => this.flag = true, 30000);
   },
   methods: {
     btnClickHandler(e) {
@@ -70,6 +88,23 @@ export default {
         e.preventDefault();
         alert('Заполните все поля!');
       }
+    },
+    submitHandler() {
+      let data = {
+                  username: this.username,
+                  email: this.email,
+                  phone: this.phone,
+                  price: this.price,
+                  longer_than_30_sec: this.flag
+                 };
+      axios.post('/send_api_request', data)
+      .then(function (response) {
+        alert('Заявка сохранена!');
+        console.log(response);
+      })
+      .catch(function (error) {
+        alert('Ошибка при сохранении.');
+      });
     }
   }
 }
@@ -84,10 +119,14 @@ h1 {
 .vue-tel-input .vti__input {
     height: 56px;
 }
+input {
+    padding: 0 20px !important;
+}
 .vue-tel-input {
     margin-bottom: 22px;
     box-shadow: none!important;
     border-color: rgb(118, 118, 118) !important;
+    border-radius: 24px!important;
 }
 .vue-tel-input:focus-within {
     border-width: 2px!important;
@@ -103,5 +142,6 @@ html {
 input {
     background: #EDE7F6 !important;
     border-radius: 2px!important;
+    border-radius: 24px!important;
 }
 </style>

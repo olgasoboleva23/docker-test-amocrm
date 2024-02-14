@@ -6,6 +6,9 @@
 
         <title>amoCRM test</title>
         @vite('resources/css/app.css')
+        <script>
+            window.token = '{{ csrf_token() }}';
+        </script>
     </head>
     <body>
       <div id="app"></div>

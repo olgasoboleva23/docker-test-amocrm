@@ -78,7 +78,9 @@ services:
       - laravel
 
   npm:
-    image: node:current-alpine
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/npm.dockerfile
     volumes:
       - ./src:/var/www/html
     ports:
@@ -86,7 +88,6 @@ services:
       - "3001:3001"
       - "5173:5173"
     working_dir: /var/www/html
-    entrypoint: [ 'npm' ]
     networks:
       - laravel
 
