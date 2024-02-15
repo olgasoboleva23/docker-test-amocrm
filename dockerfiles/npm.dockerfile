@@ -5,5 +5,7 @@ RUN mkdir -p /var/www/html
 WORKDIR /var/www/html 
 COPY ./src /var/www/html
 
-CMD [ "sh", "-c", "npm install && npm run dev" ]
+RUN npm install -g serve
+
+CMD [ "sh", "-c", "npm install && npm run build", "serve -s build 3000" ]
 
