@@ -3,7 +3,7 @@ FROM node:current-alpine
 RUN mkdir -p /var/www/html
 
 WORKDIR /var/www/html 
-ADD ./src/package.json /var/www/html
-RUN npm install
+COPY ./src /var/www/html
 
-CMD ["npm","run","build"]
+CMD [ "sh", "-c", "npm install && npm run dev" ]
+
