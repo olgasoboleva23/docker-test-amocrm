@@ -65,8 +65,6 @@ export default {
         ],
         rulesPrice: [
             (value) => {
-                console.log(value);
-                console.log(String(value).includes('.'));
                 if (!String(value).includes('.')) return true
                 return 'Должно быть целым.'
             },
@@ -91,6 +89,7 @@ export default {
     },
     submitHandler() {
       let data = {
+                  _token: window.token,
                   username: this.username,
                   email: this.email,
                   phone: this.phone,
@@ -100,7 +99,6 @@ export default {
       axios.post('/send_api_request', data)
       .then(function (response) {
         alert('Заявка сохранена!');
-        console.log(response);
       })
       .catch(function (error) {
         alert('Ошибка при сохранении.');

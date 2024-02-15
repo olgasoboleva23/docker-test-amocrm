@@ -60,6 +60,6 @@ services:
       - ./src:/var/www/html
     depends_on:
       - php
-    entrypoint: [ 'composer', 'install', '&&', 'composer', '--ignore-platform-reqs' ]
+    entrypoint: [ 'composer', 'install', '--ignore-platform-reqs' ]
     networks:
       - laravel
